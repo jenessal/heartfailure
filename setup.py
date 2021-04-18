@@ -11,6 +11,5 @@ setup(
         'flask==1.1.2',
         'pandas==1.2.4',
         'scikit-learn==0.24.1',
-        # 'pylint',
     ],
 )

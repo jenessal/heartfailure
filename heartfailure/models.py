@@ -5,48 +5,61 @@ import pandas as pd
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegressionCV
-from sklearn.svm import LinearSVC
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import VotingClassifier
 
 
 @functools.lru_cache()
-def download_data() -> tuple:
-    """Downloads the data set and extracts features, class labels and feature names."""
-    link = "http://archive.ics.uci.edu/ml/machine-learning-databases/00519/heart_failure_clinical_records_dataset.csv"
-    ret = pd.read_csv(link)
+def load_data(url: str, target_var: str) -> tuple:
+    """Downloads the dataset from given url and extracts features, class labels and feature names."""
+    # link = "http://archive.ics.uci.edu/ml/machine-learning-databases/00519/heart_failure_clinical_records_dataset.csv"
+    data = pd.read_csv(url)
 
-    columns = ret.iloc[:, :-1].columns
-    X = ret.iloc[:, :-1].values
-    y = ret.iloc[:, -1].values
-    return X, y, columns
+    X = data.copy()
+    y = X.pop(target_var)
+    columns = X.columns
+    return X.values, y.values, columns
 
 
 @functools.lru_cache()
-def train() -> dict:
+def train(url: str, target_var: str) -> dict:
     """Trains all models defined below on the data set."""
-    X, y, _ = download_data()
-    ret = {}
+    X, y, cols = load_data(url, target_var)
+    trained_models = {}
+
+    def _pipeline(model):
+        return make_pipeline(
+            StandardScaler(),
+            model,
+        )
 
     models = [
         ("LR",
-         make_pipeline(
-             StandardScaler(),
-             LogisticRegressionCV(cv=3, random_state=0),
-         )),
-        ("KN",
-         make_pipeline(
-             StandardScaler(),
-             KNeighborsClassifier(n_neighbors=3),
-         )),
-        ("SVM",
-         make_pipeline(
-             StandardScaler(),
-             LinearSVC(random_state=0, tol=1e-05),
-         )),
+         _pipeline(
+             LogisticRegressionCV(
+                 cv=5,
+                 random_state=0,
+                 class_weight='balanced',
+             ))),
+        ("GB", _pipeline(GradientBoostingClassifier())),
+        ("NN",
+         _pipeline(
+             MLPClassifier(
+                 max_iter=1000,
+                 hidden_layer_sizes=(8, 8, 4, 4),
+                 activation='tanh',
+                 learning_rate_init=0.005,
+             ))),
     ]
 
     for label, model in models:
         x = model.fit(X, y)
-        ret[label] = x
-    return ret
+        trained_models[label] = x
+
+    clf = VotingClassifier(estimators=list(trained_models.items()),
+                           voting='soft')
+    clf.fit(X, y)
+    trained_models['ensemble'] = clf
+    return trained_models, cols

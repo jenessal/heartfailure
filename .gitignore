@@ -1,6 +1,9 @@
 venv/
 *.pyc
+*.ipynb
 *.egg-info/
 dist/
-settings.cfg
 *.log*
+*.vscode/
+*.ipynb_checkpoints/
+workspace.code-workspace
