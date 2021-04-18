@@ -43,13 +43,27 @@ The JSON repsonse gives the predicted class label for each trained model and for
 {"LR": 1, "GB": 1, "NN": 1, "ensemble": 1}
 ```
 
-This data point from the training data set is used as an example.
+This data point from the training data set is used as an example. 
 
 ## Machine Learning Model Architecture
 
-Three machine learning models are implemented with a simple preprocessing pipeline and default parameters set.
+Three machine learning models are implemented with a simple preprocessing pipeline and preset parameters.
 
 * Logistic Regression
 * Gradient Boosting Classifier
 * Multi-layer Perceptron classifier
 
+The chosen models are typically individually good, quick to train, and are diverse in learning strategy, which should make for a strong ensemble. 
+
+Parameter choices:
+* Logistic regression is used with balanced class weighting to account for the slight underrepresentation of heart failure events.
+* Gradient Boosting uses up to 100 trees with max depth 4
+* The neural network uses an architecture with 4 hidden layers of size [8,8,4,4] as this is a relatively small problem with 12 features.
+
+The ensemble uses a soft voting strategy, meaning it chooses a final prediction based on the sum of predicted probabilities for each model. 
+
+During development, the ensemble was evaluated by training the above models on 
+
+## Limitations
+
+In the current implementation
