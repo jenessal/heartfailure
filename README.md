@@ -62,8 +62,11 @@ Parameter choices:
 
 The ensemble uses a soft voting strategy, meaning it chooses a final prediction based on the sum of predicted probabilities for each model. 
 
-During development, the ensemble was evaluated by training the above models on 
+During development, the ensemble was evaluated using 5-fold cross-validation and its estimated accuracy on a held-out test set was 76%. The current implementation does not prioritise discovering heart failure above correctly discerning the absence of a fatal event, which may be the desired behaviour.
 
 ## Limitations
 
-In the current implementation
+* In the current implementation, categorical features are not taken into account. Fields such as "sex", "high_blood_pressure", or "diabetes" are binary, and could be treated as such by some of the included models, however at the moment are left unprocessed.
+* Feature engineering to date is very limited, only implementing standard feature scaling.
+* Specifying a different URL to download data from, and target variable for prediction in the train is implemented, but not tested.
+* Saving trained model to disc and loading a trained model from local to predict from are not supported.
