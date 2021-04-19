@@ -67,8 +67,10 @@ During development, the ensemble was evaluated using 5-fold cross-validation and
 
 ## Limitations
 
-* In the current implementation, categorical features are not taken into account. Fields such as "sex", "high_blood_pressure", or "diabetes" are binary, and could be treated as such by some of the included models, however at the moment are left unprocessed.
+Future iterations could include more detailed data processing and technical improvements.
+* For larger models or datasets, asynchronous training and prediction would be needed.
+* In the current implementation, on-off features are not utilised as categoricals. Fields such as "sex", "high_blood_pressure", or "diabetes" are binary, and could be treated as such by some of the included models, however at the moment are not further processed.
 * Feature engineering to date is very limited, only implementing standard feature scaling.
 * Specifying a different URL to download data from, and target variable for prediction in the train is implemented, but not tested.
 * Saving trained model to disc and loading a trained model from local to predict from are not supported.
-* Prediction method currently predicts a single sample at a time.
+* Prediction method currently expects a single sample at a time.
