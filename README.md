@@ -4,7 +4,7 @@ The package structure is based on <https://github.com/candidtim/cookiecutter-fla
 
 ## Run API Server
 
-The API server requires Python 3, `make` and the python package `virtualenv`. To start the server and build the virtual environment run:
+The package requires Python 3.7, `make` and the python package `virtualenv` to build a virtual environment from which to run the server. To get a Python 3.7 environment for example with `conda` we can run `conda create -n myenv python=3.7`, `conda activate myenv` and `pip install virtualenv`. To start the server and build the local virtual environment run:
 
    ``make run``
   
@@ -56,11 +56,12 @@ Three machine learning models are implemented with a simple preprocessing pipeli
 The chosen models are typically individually good, quick to train, and are diverse in learning strategy, which should make for a strong ensemble. 
 
 Parameter choices:
+
 * Logistic regression is used with balanced class weighting to account for the slight underrepresentation of heart failure events.
 * Gradient Boosting uses up to 100 trees with max depth 4
 * The neural network uses an architecture with 4 hidden layers of size [8,8,4,4] as this is a relatively small problem with 12 features.
 
-The ensemble uses a soft voting strategy, meaning it chooses a final prediction based on the sum of predicted probabilities for each model. 
+The ensemble uses a soft voting strategy, meaning it chooses a final prediction based on the sum of predicted probabilities for each model.
 
 During development, the ensemble was evaluated using 5-fold cross-validation and its estimated accuracy on a held-out test set was 76%. The current implementation does not prioritise discovering heart failure above correctly discerning the absence of a fatal event, which may be the desired behaviour.
 
@@ -70,3 +71,4 @@ During development, the ensemble was evaluated using 5-fold cross-validation and
 * Feature engineering to date is very limited, only implementing standard feature scaling.
 * Specifying a different URL to download data from, and target variable for prediction in the train is implemented, but not tested.
 * Saving trained model to disc and loading a trained model from local to predict from are not supported.
+* Prediction method currently predicts a single sample at a time.
